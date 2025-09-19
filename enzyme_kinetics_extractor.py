@@ -215,7 +215,7 @@ class ProgressIndicator:
         self.description = description
         self.start_time = time.time()
     
-    def update(self, step: int = None):
+    def update(self, step: Optional[int] = None) -> None:
         """Aktualizuje progress"""
         if step is not None:
             self.current_step = step
@@ -237,7 +237,7 @@ class ProgressIndicator:
             print()  # Nový řádek na konci
 
 
-def _analyze_data_with_parser(data: bytes, target_min: float, target_max: float, file_size: int) -> Dict[str, List[DataPoint]]:
+def _analyze_data_with_parser(data: Union[bytes, Any], target_min: float, target_max: float, file_size: int) -> Dict[str, List[DataPoint]]:
     """Interní funkce pro analýzu dat s optimalizovaným parserem"""
     parser = OptimizedDataParser(target_min, target_max)
     results = {}
@@ -597,7 +597,7 @@ Příklady použití:
             # Extrakce dat s adaptivní detekcí struktury
             structure, best_format = extract_adaptive_format_data(ascii_path, results)
             
-            if structure:
+            if structure and best_format:
                 # Určení výstupního souboru
                 if args.output:
                     output_file = Path(args.output)
