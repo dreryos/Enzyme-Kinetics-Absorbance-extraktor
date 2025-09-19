@@ -1,0 +1,22 @@
+# Core Python libraries (part of standard library)
+# No additional dependencies required
+
+# Optional dependencies for enhanced functionality
+# argparse - Already included in Python 3.2+
+# csv - Already included in Python standard library
+# os - Already included in Python standard library
+# struct - Already included in Python standard library
+
+# Development dependencies (optional)
+# For code formatting and linting
+black>=22.0.0
+flake8>=4.0.0
+pylint>=2.12.0
+
+# For testing (optional)
+pytest>=6.0.0
+pytest-cov>=3.0.0
+
+# For documentation (optional)
+sphinx>=4.0.0
+sphinx-rtd-theme>=1.0.0
