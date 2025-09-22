@@ -5,6 +5,24 @@ Všechny významné změny v tomto projektu budou zdokumentovány v tomto soubor
 Formát je založen na [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 a tento projekt dodržuje [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2025-09-22
+
+### 📊 Formát s opakováními pro statistickou analýzu
+- **BREAKING CHANGE**: CSV výstup nyní strukturován jako 6 vzorků × 6 opakování
+- Jeden řádek per opakování pro jednodušší statistickou analýzu
+- Mapování: původní vzorky 1,7,13,19,25,31 → vzorek 1 (opakování 1-6)
+- Struktura: `Sample_ID, Replication, Absorbance_0s, Absorbance_10s, Absorbance_20s, Absorbance_30s`
+- Celkem 6 řádků místo původních 36 individuálních vzorků
+
+### 📋 Nová struktura CSV
+```csv
+Sample_ID,Replication,Absorbance_0s,Absorbance_10s,Absorbance_20s,Absorbance_30s
+1,1,0.822700,0.829300,1.723500,0.897000
+1,2,1.233700,1.233600,1.233600,1.233600
+1,3,1.233600,1.229800,1.233600,1.233600
+...
+```
+
 ## [2.1.0] - 2025-09-22
 
 ### 📊 Nový CSV pivot formát
