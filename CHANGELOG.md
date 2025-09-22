@@ -5,6 +5,34 @@ Všechny významné změny v tomto projektu budou zdokumentovány v tomto soubor
 Formát je založen na [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 a tento projekt dodržuje [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-09-22
+
+### 📊 Nový CSV pivot formát
+
+#### Změněno
+- **CSV výstup**: Přechod z long formátu na pivot tabulku s časovými sloupci
+- **Struktura dat**: Každý vzorek nyní na jednom řádku místo čtyř řádků
+- **Hlavička CSV**: Nové sloupce `Sample_ID`, `Absorbance_0s`, `Absorbance_10s`, `Absorbance_20s`, `Absorbance_30s`
+
+#### Výhody nového formátu
+- **Kompaktnější**: 36 řádků místo 144 řádků (75% úspora místa)
+- **Excel-friendly**: Ideální pro vytváření grafů a analýz
+- **Lepší čitelnost**: Snadnější porovnání časových bodů per vzorek
+- **Zachovaná metadata**: Formát, vlnová délka, zdrojový soubor
+
+#### Příklad nového formátu
+```csv
+Sample_ID,Absorbance_0s,Absorbance_10s,Absorbance_20s,Absorbance_30s,Wavelength_nm,Format_Used,Source_File
+1,0.822700,0.829300,1.723500,0.897000,290,<H,data.iwbk
+2,0.829900,1.667200,1.361700,0.824900,290,<H,data.iwbk
+```
+
+#### Zpětná kompatibilita
+- ✅ Stejný CLI interface
+- ✅ Všechny původní funkce zachovány
+- ✅ Stejná přesnost dat (6 desetinných míst)
+- ⚠️ **Breaking change**: Jiná struktura CSV výstupu
+
 ## [2.0.0] - 2025-09-19
 
 ### 🚀 Hlavní optimalizace výkonu

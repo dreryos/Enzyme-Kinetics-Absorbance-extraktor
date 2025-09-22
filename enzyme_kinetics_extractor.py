@@ -456,22 +456,21 @@ def _filter_duplicate_values(values: List[DataPoint], min_distance: int = 2) -> 
 
 
 def generate_kinetic_csv_output(structure: KineticStructure, best_format: str, output_file: Union[str, Path], source_file: Union[str, Path]) -> int:
-    """Generuje CSV soubor s kinetickou strukturou (36 vzorků × 4 časové body)"""
+    """Generuje CSV soubor s kinetickou strukturou v pivot formátu (sloupce pro časové body)"""
     print(f"\n💾 Generuji kinetický CSV výstup: {output_file}")
     
     with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
+        
+        # Hlavička s pivot formátem - sloupce pro jednotlivé časové body
         writer.writerow([
             'Sample_ID',
-            'Sample_Name',
+            'Absorbance_0s',
+            'Absorbance_10s', 
+            'Absorbance_20s',
+            'Absorbance_30s',
             'Wavelength_nm',
-            'Time_Point',
-            'Time_sec',
-            'Absorbance',
-            'Raw_Value',
-            'Scale_Factor',
             'Format_Used',
-            'File_Offset',
             'Source_File'
         ])
         
@@ -479,33 +478,33 @@ def generate_kinetic_csv_output(structure: KineticStructure, best_format: str, o
         time_intervals = structure.time_intervals
         
         for sample_idx, cluster in enumerate(structure.clusters, 1):
-            sample_name = f"290nm, Sample{sample_idx}"
-            
             # Seřadíme hodnoty v clusteru podle pozice
             cluster.sort(key=lambda x: x.offset)
             
+            # Připravíme pole pro absorbance hodnoty pro každý časový bod
+            absorbance_values = [''] * 4  # Defaultní prázdné hodnoty
+            
             for time_idx, value_data in enumerate(cluster):
-                # Použijeme standardní časové intervaly
-                time_sec = time_intervals[time_idx] if time_idx < len(time_intervals) else time_idx * 10
-                
-                writer.writerow([
-                    sample_idx,
-                    sample_name,
-                    290,  # Standardní vlnová délka
-                    time_idx + 1,
-                    time_sec,
-                    f"{value_data.scaled_value:.6f}",
-                    value_data.raw_value,
-                    f"{value_data.scale_factor:.6f}",
-                    best_format,
-                    value_data.offset,
-                    os.path.basename(source_file)
-                ])
-                total_points += 1
+                if time_idx < 4:  # Ujistíme se, že nepřekročíme očekávané časové body
+                    absorbance_values[time_idx] = f"{value_data.scaled_value:.6f}"
+                    total_points += 1
+            
+            # Zapíšeme řádek pro vzorek
+            writer.writerow([
+                sample_idx,
+                absorbance_values[0] if len(absorbance_values) > 0 else '',  # 0s
+                absorbance_values[1] if len(absorbance_values) > 1 else '',  # 10s
+                absorbance_values[2] if len(absorbance_values) > 2 else '',  # 20s
+                absorbance_values[3] if len(absorbance_values) > 3 else '',  # 30s
+                290,  # Standardní vlnová délka
+                best_format,
+                os.path.basename(source_file)
+            ])
         
-        print(f"   ✅ Uloženo {total_points} datových bodů")
+        print(f"   ✅ Uloženo {total_points} datových bodů v {len(structure.clusters)} řádcích")
         print(f"   🧪 {structure.sample_count} vzorků × {structure.time_points_per_sample} časových bodů")
         print(f"   ⏱️ Časové intervaly: {time_intervals}")
+        print(f"   📊 Formát: Pivot tabulka s časovými sloupci")
         return total_points
 
 def validate_iwbk_file(file_path: Union[str, Path]) -> bool:
